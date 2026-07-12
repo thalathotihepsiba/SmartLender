@@ -1,0 +1,34 @@
+{
+  "results": {
+    "Decision Tree": {
+      "train_accuracy": 78.03,
+      "test_accuracy": 74.26
+    },
+    "Random Forest": {
+      "train_accuracy": 85.56,
+      "test_accuracy": 73.53
+    },
+    "KNN": {
+      "train_accuracy": 75.52,
+      "test_accuracy": 71.32
+    },
+    "XGBoost": {
+      "train_accuracy": 96.86,
+      "test_accuracy": 73.53
+    }
+  },
+  "best_model": "Decision Tree",
+  "feature_columns": [
+    "Gender",
+    "Married",
+    "Dependents",
+    "Education",
+    "Self_Employed",
+    "Property_Area",
+    "ApplicantIncome",
+    "CoapplicantIncome",
+    "LoanAmount",
+    "Loan_Amount_Term",
+    "Credit_History"
+  ]
+}

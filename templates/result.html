@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Lender — Evaluation Result</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+
+  <div class="ledger-header">
+    <p class="eyebrow">Smart Lender · Underwriting Console</p>
+    <h1>Evaluation Result</h1>
+    <p>Model-generated prediction for the application submitted below.</p>
+  </div>
+
+  <div class="wrap">
+
+    <div class="card verdict {{ 'approved' if result.approved else 'declined' }}">
+      <div class="dial-wrap">
+        <svg viewBox="0 0 200 120" width="180" height="108">
+          <path d="M 15 105 A 85 85 0 0 1 185 105" fill="none"
+                stroke="#ddd6c4" stroke-width="14" stroke-linecap="round" />
+          <path d="M 15 105 A 85 85 0 0 1 185 105" fill="none"
+                stroke="{{ '#2e7d6b' if result.approved else '#b4472d' }}"
+                stroke-width="14" stroke-linecap="round"
+                stroke-dasharray="{{ result.arc_length }} 267" />
+          <line x1="100" y1="105"
+                x2="{{ result.needle_x }}"
+                y2="{{ result.needle_y }}"
+                stroke="#101a2b" stroke-width="3" stroke-linecap="round" />
+          <circle cx="100" cy="105" r="5" fill="#101a2b" />
+        </svg>
+        <div class="dial-value">
+          {% if result.confidence is not none %}
+            {{ result.confidence }}% confidence
+          {% else %}
+            model confidence n/a
+          {% endif %}
+        </div>
+      </div>
+
+      <div>
+        <p class="verdict-title">Prediction</p>
+        {% if result.approved %}
+          <h2 class="verdict-headline">Loan Approved</h2>
+          <p class="verdict-body">The applicant's profile matches patterns strongly associated with repayment in the training data. This application is a candidate for fast-track processing, subject to standard document verification.</p>
+        {% else %}
+          <h2 class="verdict-headline">Loan Declined</h2>
+          <p class="verdict-body">The applicant's profile matches patterns associated with higher default risk in the training data. Recommend routing to manual underwriting review with additional income and credit documentation.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="card recap">
+      <p class="section-label"><span>Application Recap</span></p>
+      <table>
+        <tr><td class="k">Gender</td><td class="v">{{ result.applicant.Gender }}</td></tr>
+        <tr><td class="k">Marital status</td><td class="v">{{ 'Married' if result.applicant.Married == 'Yes' else 'Not married' }}</td></tr>
+        <tr><td class="k">Dependents</td><td class="v">{{ result.applicant.Dependents }}</td></tr>
+        <tr><td class="k">Education</td><td class="v">{{ result.applicant.Education }}</td></tr>
+        <tr><td class="k">Self-employed</td><td class="v">{{ result.applicant.Self_Employed }}</td></tr>
+        <tr><td class="k">Applicant income / month</td><td class="v">{{ result.applicant.ApplicantIncome | int }}</td></tr>
+        <tr><td class="k">Co-applicant income / month</td><td class="v">{{ result.applicant.CoapplicantIncome | int }}</td></tr>
+        <tr><td class="k">Requested loan amount (thousands)</td><td class="v">{{ result.applicant.LoanAmount | int }}</td></tr>
+        <tr><td class="k">Loan term (months)</td><td class="v">{{ result.applicant.Loan_Amount_Term | int }}</td></tr>
+        <tr><td class="k">Credit history</td><td class="v">{{ 'Meets guidelines' if result.applicant.Credit_History == 1 else 'Does not meet guidelines' }}</td></tr>
+        <tr><td class="k">Property area</td><td class="v">{{ result.applicant.Property_Area }}</td></tr>
+      </table>
+    </div>
+
+    <a class="back-link" href="/">← Evaluate another application</a>
+  </div>
+
+  <footer class="foot">Smart Lender — ML-powered credit evaluation · Flask + scikit-learn / XGBoost</footer>
+
+</body>
+</html>
